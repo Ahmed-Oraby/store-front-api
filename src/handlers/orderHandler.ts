@@ -1,5 +1,6 @@
 import express from 'express';
 import { Order, OrderStore } from '../models/order';
+import verifyToken from './verifyToken';
 
 const router = express.Router();
 const store = new OrderStore();
@@ -57,7 +58,7 @@ const addProduct = async (req: express.Request, res: express.Response) => {
 
 router.get('/', index);
 router.get('/:id', show);
-router.post('/', create);
+router.post('/', verifyToken, create);
 router.post('/:id/products/', addProduct);
 router.delete('/:id', remove);
 

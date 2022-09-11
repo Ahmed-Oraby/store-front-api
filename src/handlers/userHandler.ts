@@ -1,5 +1,7 @@
 import express from 'express';
 import { User, UserStore } from '../models/user';
+import jwt from 'jsonwebtoken';
+import verifyToken from './verifyToken';
 
 const router = express.Router();
 const store = new UserStore();
@@ -24,13 +26,14 @@ const show = async (req: express.Request, res: express.Response) => {
 
 const create = async (req: express.Request, res: express.Response) => {
 	try {
-		console.log(req.body);
-		const row = await store.create({
+		const newUser = await store.create({
 			firstname: req.body.firstname,
 			lastname: req.body.lastname,
+			username: req.body.username,
 			password: req.body.password,
 		});
-		res.json(row);
+		const token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as string);
+		res.json({ newUser, token });
 	} catch (err) {
 		res.status(400).send(`Error: ${err}`);
 	}
@@ -45,9 +48,19 @@ const remove = async (req: express.Request, res: express.Response) => {
 	}
 };
 
-router.get('/', index);
-router.get('/:id', show);
+const authenticate = async (req: express.Request, res: express.Response) => {
+	try {
+		const user = await store.authenticate(req.body.username, req.body.password);
+		const token = jwt.sign({ user }, process.env.TOKEN_SECRET as string);
+		res.json(user);
+	} catch (err) {
+		res.status(400).send(`Error: ${err}`);
+	}
+};
+
+router.get('/', verifyToken, index);
+router.get('/:id', verifyToken, show);
 router.post('/', create);
-router.delete('/:id', remove);
+router.delete('/:id', verifyToken, remove);
 
 export default router;

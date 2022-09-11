@@ -1,5 +1,6 @@
 import express from 'express';
 import { Product, ProductStore } from '../models/product';
+import verifyToken from './verifyToken';
 
 const router = express.Router();
 const store = new ProductStore();
@@ -24,7 +25,6 @@ const show = async (req: express.Request, res: express.Response): Promise<void> 
 
 const create = async (req: express.Request, res: express.Response): Promise<void> => {
 	try {
-		console.log(req.body);
 		const row = await store.create({
 			name: req.body.name,
 			price: req.body.price,
@@ -46,7 +46,7 @@ const remove = async (req: express.Request, res: express.Response): Promise<void
 
 router.get('/', index);
 router.get('/:id', show);
-router.post('/', create);
+router.post('/', verifyToken, create);
 router.delete('/:id', remove);
 
 export default router;
