@@ -7,9 +7,8 @@ const verifyToken = (
 	next: express.NextFunction
 ): void => {
 	try {
-		// const authorizationHeader = req.headers.authorization
-		// const token = authorizationHeader.split(' ')[1]
-		const token = req.body.token;
+		const authorizationHeader = req.headers.authorization as string;
+		const token = authorizationHeader.split(' ')[1];
 		jwt.verify(token, process.env.TOKEN_SECRET as string);
 		next();
 	} catch (err) {

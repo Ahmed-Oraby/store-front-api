@@ -1,6 +1,7 @@
 import database from '../database';
 
 export type Product = {
+	id?: string;
 	name: string;
 	price: number;
 };

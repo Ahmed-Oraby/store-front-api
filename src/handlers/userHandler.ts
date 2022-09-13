@@ -52,7 +52,7 @@ const authenticate = async (req: express.Request, res: express.Response) => {
 	try {
 		const user = await store.authenticate(req.body.username, req.body.password);
 		const token = jwt.sign({ user }, process.env.TOKEN_SECRET as string);
-		res.json(user);
+		res.json({ user, token });
 	} catch (err) {
 		res.status(400).send(`Error: ${err}`);
 	}
@@ -62,5 +62,6 @@ router.get('/', verifyToken, index);
 router.get('/:id', verifyToken, show);
 router.post('/', create);
 router.delete('/:id', verifyToken, remove);
+router.post('/login', authenticate);
 
 export default router;

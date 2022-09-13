@@ -1,10 +1,8 @@
 import database from '../database';
-import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 
-dotenv.config();
-
 export type User = {
+	id?: string;
 	firstname: string;
 	lastname: string;
 	username: string;
@@ -70,12 +68,13 @@ export class UserStore {
 
 	async authenticate(username: string, password: string): Promise<User | null> {
 		try {
-			const sql = 'SELECT password_digest FROM users WHERE username=($1) RETURNING *';
+			const sql = 'SELECT * FROM users WHERE username=($1)';
 			const conn = await database.connect();
 			const result = await conn.query(sql, [username]);
 			conn.release();
 			if (result.rows.length) {
 				const user = result.rows[0];
+				console.log(user);
 				if (bcrypt.compareSync(password + pepper, user.password_digest) === true) {
 					return user;
 				}
