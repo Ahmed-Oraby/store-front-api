@@ -34,7 +34,6 @@ const showByUser = async (req: express.Request, res: express.Response) => {
 
 const create = async (req: express.Request, res: express.Response) => {
 	try {
-		console.log(req.body);
 		const row = await store.create({
 			userId: req.body.userId,
 			status: req.body.status,

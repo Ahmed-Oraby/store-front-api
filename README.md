@@ -2,7 +2,7 @@
 
 ## Setup Project
 
-Create '.env' file in the root of the project,and add the following enviorment variables inside it :
+Create '.env' file in the root of the project, and add the following enviorment variables inside it :
 
 -   POSTGRES_HOST: the host for the database
 -   POSTGRES_DB: the name for the database
@@ -27,7 +27,7 @@ Edit 'database.json' file in the root of the project, with the following propert
 	},
 	"test": {
 		"driver": "pg",
-		"host": "REPLACE with the database hose, for example: 127.0.0.1",
+		"host": "REPLACE with the database host, for example: 127.0.0.1",
 		"database": "REPLACE with the name of the test database",
 		"user": "REPLACE with the username for postgres",
 		"password": "REPLACE with the password for postgres"
@@ -65,7 +65,7 @@ Run the production server inside the '/build' folder.
 
 -   'localhost:3000/api/products' --> The API endpoint for CRUD operations on products
 
--   'localhost:3000/api/orders' --> The API endpoint for CRUD operations on oerders
+-   'localhost:3000/api/orders' --> The API endpoint for CRUD operations on orders
 
 ## Usage
 
@@ -81,4 +81,4 @@ Run the production server inside the '/build' folder.
 
 -   Run `yarn start` to start the development server.
 
--   Now you have the proper schema on the database, you can start using the API endpoints as describes inside 'Requirements.md'.
+-   Now you have the proper schema on the database, you can start using the API endpoints as described inside [REQUIREMENTS](REQUIREMENTS.md).

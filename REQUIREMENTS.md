@@ -1,22 +1,53 @@
 # API Requirements
 
-These are the document notes that describes what endpoints the API needs to supply, as well as data shapes, database schema, and all the database tables.
+These are the document notes that describes the API endpoints and their CRUD operations, as well as data shapes, database schema, and all the database tables.
 
 ## API Endpoints
+
+**NOTE: All tokens must be in the Authorization header request of type 'Bearer'.**
 
 #### Products
 
 -   Index: '/api/products' [GET]
 -   Show: '/api/products/:id' [GET]
--   Create: '/api/products' [POST] [token required]
+-   Create: '/api/products' [POST] [token required],
+    body request example:
+
+```json
+{
+	"name": "laptop",
+	"price": 2000
+}
+```
+
 -   Delete: '/api/products/:id' [DELETE] [token required]
 
 #### Users
 
 -   Index: '/api/users' [GET] [token required]
 -   Show: '/api/users/:id' [GET] [token required]
--   Create: '/api/users' [POST]
--   Login: '/api/users/login' [POST]
+-   Create: '/api/users' [POST],
+    body request example:
+
+```json
+{
+	"firstname": "John",
+	"lastname": "Doe",
+	"username": "johndoe",
+	"password": "12345"
+}
+```
+
+-   Login: '/api/users/login' [POST],
+    body request example:
+
+```json
+{
+	"username": "johndoe",
+	"password": "12345"
+}
+```
+
 -   Delete: '/api/users' [DELETE] [token required]
 
 #### Orders
@@ -24,9 +55,26 @@ These are the document notes that describes what endpoints the API needs to supp
 -   Current Order by user (args: user id): '/api/orders/user/:id' [GET] [token required]
 -   Index: '/api/orders' [GET]
 -   Show: '/api/orders/:id' [GET]
--   Create: '/api/orders' [POST] [token required]
+-   Create: '/api/orders' [POST] [token required],
+    body request example:
+
+```json
+{
+	"userId": "5",
+	"status": "active"
+}
+```
+
 -   Delete: '/api/orders' [DELETE] [token required]
--   Add product: '/api/orders/:id/products' [POST] [token required]
+-   Add product: '/api/orders/:id/products' [POST] [token required],
+    body request example:
+
+```json
+{
+	"productId": "3",
+	"quantity": 10
+}
+```
 
 ## Data Shapes
 
@@ -40,7 +88,9 @@ These are the document notes that describes what endpoints the API needs to supp
         public | products | table | postgres
         public | users | table | postgres
 
-#### Product
+### Database Tables
+
+#### Products Table
 
 -   id
 -   name
@@ -58,7 +108,7 @@ These are the document notes that describes what endpoints the API needs to supp
         Referenced by:
         TABLE "order_products" CONSTRAINT "order_products_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(id)
 
-#### User
+#### Users Table
 
 -   id
 -   firstName
@@ -80,38 +130,41 @@ These are the document notes that describes what endpoints the API needs to supp
         Referenced by:
         TABLE "orders" CONSTRAINT "orders_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
 
-#### Orders
+#### Orders Table
 
 -   id
--   id of each product in the order
--   quantity of each product in the order
--   user_id
 -   status of order (active or complete)
+-   user_id
 
                                         Table "public.orders"
-
-        Column | Type | Collation | Nullable | Default
+        Column  |         Type          | Collation | Nullable |              Default
         ---------+-----------------------+-----------+----------+------------------------------------
-        id | integer | | not null | nextval('orders_id_seq'::regclass)
-        status | character varying(20) | | not null |
-        user_id | bigint | | not null |
+        id      | integer               |           | not null | nextval('orders_id_seq'::regclass)
+        status  | character varying(20) |           | not null |
+        user_id | bigint                |           | not null |
         Indexes:
         "orders_pkey" PRIMARY KEY, btree (id)
         Foreign-key constraints:
-        "orders_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+        "orders_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
         Referenced by:
-        TABLE "order_products" CONSTRAINT "order_products_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id)
+        TABLE "order_products" CONSTRAINT "order_products_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+
+#### Order_Products Table
+
+-   id
+-   quantity
+-   order_id
+-   product_id
 
                                   Table "public.order_products"
-
-        Column | Type | Collation | Nullable | Default
-        ------------+---------+-----------+----------+--------------------------------------------
-        id | integer | | not null | nextval('order_products_id_seq'::regclass)
-        quantity | integer | | not null |
-        order_id | bigint | | not null |
-        product_id | bigint | | not null |
-        Indexes:
-        "order_products_pkey" PRIMARY KEY, btree (id)
-        Foreign-key constraints:
-        "order_products_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id)
-        "order_products_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(id)
+          Column   |  Type   | Collation | Nullable |                  Default
+          ------------+---------+-----------+----------+--------------------------------------------
+          id         | integer |           | not null | nextval('order_products_id_seq'::regclass)
+          quantity   | integer |           | not null |
+          order_id   | bigint  |           | not null |
+          product_id | bigint  |           | not null |
+          Indexes:
+          "order_products_pkey" PRIMARY KEY, btree (id)
+          Foreign-key constraints:
+          "order_products_order_id_fkey" FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+          "order_products_product_id_fkey" FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
