@@ -47,6 +47,6 @@ const remove = async (req: express.Request, res: express.Response): Promise<void
 router.get('/', index);
 router.get('/:id', show);
 router.post('/', verifyToken, create);
-router.delete('/:id', remove);
+router.delete('/:id', verifyToken, remove);
 
 export default router;

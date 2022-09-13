@@ -23,6 +23,15 @@ const show = async (req: express.Request, res: express.Response) => {
 	}
 };
 
+const showByUser = async (req: express.Request, res: express.Response) => {
+	try {
+		const row = await store.showByUser(req.params.id);
+		res.json(row);
+	} catch (err) {
+		res.status(400).send(`Error: ${err}`);
+	}
+};
+
 const create = async (req: express.Request, res: express.Response) => {
 	try {
 		console.log(req.body);
@@ -58,8 +67,9 @@ const addProduct = async (req: express.Request, res: express.Response) => {
 
 router.get('/', index);
 router.get('/:id', show);
+router.get('/user/:id', verifyToken, showByUser);
 router.post('/', verifyToken, create);
-router.post('/:id/products/', addProduct);
-router.delete('/:id', remove);
+router.post('/:id/products/', verifyToken, addProduct);
+router.delete('/:id', verifyToken, remove);
 
 export default router;

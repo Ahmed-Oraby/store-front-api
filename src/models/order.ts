@@ -1,7 +1,6 @@
 import database from '../database';
 
 export type Order = {
-	id?: string;
 	userId: string;
 	status: string;
 };
@@ -27,6 +26,17 @@ export class OrderStore {
 			return result.rows[0];
 		} catch (err) {
 			throw new Error(`Cannot get order with id: ${id}, Error: ${err}`);
+		}
+	}
+	async showByUser(userId: string): Promise<Order[]> {
+		try {
+			const sql = 'SELECT * FROM orders WHERE user_id=($1)';
+			const conn = await database.connect();
+			const result = await conn.query(sql, [userId]);
+			conn.release();
+			return result.rows;
+		} catch (err) {
+			throw new Error(`Cannot get order with id: ${userId}, Error: ${err}`);
 		}
 	}
 	async create(order: Order): Promise<Order> {
