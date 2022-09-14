@@ -40,7 +40,7 @@ export class UserStore {
 			const hash = bcrypt.hashSync(user.password + pepper, parseInt(saltRounds));
 
 			const sql =
-				'INSERT INTO users (firstname, lastname, username, password_digest) VALUES ($1, $2, $3, $4) RETURNING id, username';
+				'INSERT INTO users (firstname, lastname, username, password) VALUES ($1, $2, $3, $4) RETURNING id, username';
 			const conn = await database.connect();
 			const result = await conn.query(sql, [
 				user.firstname,
@@ -74,7 +74,7 @@ export class UserStore {
 			conn.release();
 			if (result.rows.length) {
 				const user = result.rows[0];
-				if (bcrypt.compareSync(password + pepper, user.password_digest) === true) {
+				if (bcrypt.compareSync(password + pepper, user.password) === true) {
 					return user;
 				}
 			}

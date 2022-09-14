@@ -117,18 +117,17 @@ These are the document notes that describes the API endpoints and their CRUD ope
 -   password_digest (hashed password)
 
                                             Table "public.users"
-        Column      |          Type          | Collation | Nullable |              Default
-
-        -----------------+------------------------+-----------+----------+-----------------------------------
-        id | integer | | not null | nextval('users_id_seq'::regclass)
-        firstname | character varying(50) | | not null |
-        lastname | character varying(50) | | not null |
-        username | character varying(50) | | not null |
-        password_digest | character varying(255) | | not null |
+        Column   |          Type          | Collation | Nullable |              Default
+        -----------+------------------------+-----------+----------+-----------------------------------
+        id        | integer                |           | not null | nextval('users_id_seq'::regclass)
+        firstname | character varying(50)  |           | not null |
+        lastname  | character varying(50)  |           | not null |
+        username  | character varying(50)  |           | not null |
+        password  | character varying(255) |           | not null |
         Indexes:
-        "users_pkey" PRIMARY KEY, btree (id)
+            "users_pkey" PRIMARY KEY, btree (id)
         Referenced by:
-        TABLE "orders" CONSTRAINT "orders_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id)
+            TABLE "orders" CONSTRAINT "orders_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 
 #### Orders Table
 

@@ -1,7 +1,8 @@
 import database from '../database';
 
 export type Order = {
-	userId: string;
+	id?: string;
+	user_id: string;
 	status: string;
 };
 
@@ -44,7 +45,7 @@ export class OrderStore {
 			const sql =
 				'INSERT INTO orders (user_id, status) VALUES ((SELECT id from users WHERE id=$1), $2) RETURNING *';
 			const conn = await database.connect();
-			const result = await conn.query(sql, [order.userId, order.status]);
+			const result = await conn.query(sql, [order.user_id, order.status]);
 			conn.release();
 			return result.rows[0];
 		} catch (err) {
