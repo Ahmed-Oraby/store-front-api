@@ -17,10 +17,6 @@ describe('Order Model', () => {
 	it('should have a delete method', () => {
 		expect(store.delete).toBeDefined();
 	});
-	// it('index method should return an array', async () => {
-	// 	const result = await store.index();
-	// 	expect(result).toEqual([]);
-	// });
 });
 
 const user: User = {

@@ -35,7 +35,7 @@ const showByUser = async (req: express.Request, res: express.Response) => {
 const create = async (req: express.Request, res: express.Response) => {
 	try {
 		const row = await store.create({
-			user_id: req.body.userId,
+			user_id: req.body.user_id,
 			status: req.body.status,
 		});
 		res.json(row);
@@ -64,8 +64,8 @@ const addProduct = async (req: express.Request, res: express.Response) => {
 	}
 };
 
-router.get('/', index);
-router.get('/:id', show);
+router.get('/', verifyToken, index);
+router.get('/:id', verifyToken, show);
 router.get('/user/:id', verifyToken, showByUser);
 router.post('/', verifyToken, create);
 router.post('/:id/products/', verifyToken, addProduct);

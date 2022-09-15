@@ -2,6 +2,13 @@
 
 ## Setup Project
 
+### Ports
+
+-   Default port for running the application is: 3000
+-   Default port for running the postgres database is: 5432
+
+### Enviroment Variables
+
 Create '.env' file in the root of the project, and add the following enviorment variables inside it :
 
 -   POSTGRES_HOST: the host for the database
